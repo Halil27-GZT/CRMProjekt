@@ -20,19 +20,44 @@ def kunde_hinzufuegen():
     email = input("E-Mail des Kunden: ")
     telefon = input("Telefonnummer des Kunden: ")
 
-    # Überprüfe, ob der Kunde bereits existiert (Annahme: Name ist eindeutig)
     if name in kunden:
         print(f"Fehler: Kunde '{name}' existiert bereits im Katalog.")
-        return # Beende die Funktion, wenn der Kunde schon da ist
+        return
 
-    # Füge den neuen Kunden zum 'kunden'-Dictionary hinzu
     kunden[name] = {
         "email": email,
         "telefon": telefon
     }
     print(f"Kunde '{name}' wurde hinzugefügt.")
 
+def zeige_menue(): # NEU
+    print("\n--- CRM Menü ---")
+    print("1. Kunde hinzufügen")
+    print("2. Kunden anzeigen")
+    print("3. Beenden")
+    print("----------------")
+
+def main(): # NEU
+    while True:
+        zeige_menue()
+        wahl = input("Ihre Wahl: ")
+
+        if wahl == '1':
+            kunde_hinzufuegen()
+        elif wahl == '2':
+            kunden_anzeigen()
+        elif wahl == '3':
+            print("Programm wird beendet. Auf Wiedersehen!")
+            break
+        else:
+            print("Ungültige Eingabe. Bitte versuchen Sie es erneut.")
+
+# Startet das Hauptprogramm, wenn die Datei direkt ausgeführt wird
+if __name__ == "__main__": # NEU
+    main()
+
+
 # Test der Funktion (wird später durch ein Menü ersetzt)
-kunde_hinzufuegen()
-kunden_anzeigen()
+# kunde_hinzufuegen()
+# kunden_anzeigen()
 
