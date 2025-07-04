@@ -30,14 +30,35 @@ def kunde_hinzufuegen():
     }
     print(f"Kunde '{name}' wurde hinzugefügt.")
 
-def zeige_menue(): # NEU
+def kunde_suchen(): # NEU
+    print("\n--- Kunden suchen ---")
+    suchbegriff = input("Geben Sie einen Suchbegriff (Name oder E-Mail) ein: ").lower()
+    gefundene_kunden = {}
+
+    for name, details in kunden.items():
+        if suchbegriff in name.lower() or suchbegriff in details.get('email', '').lower():
+            gefundene_kunden[name] = details
+
+    if not gefundene_kunden:
+        print(f"Keine Kunden gefunden, die '{suchbegriff}' im Namen oder in der E-Mail enthalten.")
+        return
+
+    print(f"\n--- Gefundene Kunden für '{suchbegriff}' ---")
+    for name, details in gefundene_kunden.items():
+        print(f"Name: {name}")
+        print(f"  E-Mail: {details.get('email', 'N/A')}")
+        print(f"  Telefon: {details.get('telefon', 'N/A')}")
+        print("-------------------------")
+
+def zeige_menue():
     print("\n--- CRM Menü ---")
     print("1. Kunde hinzufügen")
     print("2. Kunden anzeigen")
-    print("3. Beenden")
+    print("3. Kunde suchen") # GEÄNDERT
+    print("4. Beenden")    # GEÄNDERT
     print("----------------")
 
-def main(): # NEU
+def main():
     while True:
         zeige_menue()
         wahl = input("Ihre Wahl: ")
@@ -46,15 +67,17 @@ def main(): # NEU
             kunde_hinzufuegen()
         elif wahl == '2':
             kunden_anzeigen()
-        elif wahl == '3':
+        elif wahl == '3': # GEÄNDERT
+            kunde_suchen()
+        elif wahl == '4': # GEÄNDERT
             print("Programm wird beendet. Auf Wiedersehen!")
             break
         else:
             print("Ungültige Eingabe. Bitte versuchen Sie es erneut.")
 
-# Startet das Hauptprogramm, wenn die Datei direkt ausgeführt wird
-if __name__ == "__main__": # NEU
+if __name__ == "__main__":
     main()
+
 
 
 # Test der Funktion (wird später durch ein Menü ersetzt)
