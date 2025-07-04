@@ -166,6 +166,6 @@ if __name__ == "__main__":
     main()
 
 # Test der Funktion (wird später durch ein Menü ersetzt)
-kunde_hinzufuegen()
-kunden_anzeigen()
+# kunde_hinzufuegen()
+# kunden_anzeigen()
 
