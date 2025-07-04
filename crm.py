@@ -1,9 +1,10 @@
-import json # NEU
+import json
+import re # NEU: Für E-Mail-Validierung
 
 # Dein Kundenmanagement-System
 
 kunden = {} # Ein Dictionary zum Speichern der Kunden. Schlüssel: Kundenname, Wert: Dictionary mit Details
-DATEINAME = "kunden.json" # NEU: Dateiname für die Speicherung des Katalogs
+DATEINAME = "kunden.json" # Dateiname für die Speicherung des Katalogs
 
 def kunden_anzeigen():
     if not kunden:
@@ -17,11 +18,25 @@ def kunden_anzeigen():
         print(f"  Telefon: {details.get('telefon', 'N/A')}")
         print("-------------------------")
 
-def kunde_hinzufuegen():
+def kunde_hinzufuegen(): # GEÄNDERT: Mit Validierung
     print("\n--- Kunden hinzufügen ---")
     name = input("Name des Kunden: ")
-    email = input("E-Mail des Kunden: ")
-    telefon = input("Telefonnummer des Kunden: ")
+
+    # Validierung für E-Mail
+    while True:
+        email = input("E-Mail des Kunden: ")
+        if re.match(r"[^@]+@[^@]+\.[^@]+", email):
+            break
+        else:
+            print("Ungültiges E-Mail-Format. Bitte versuchen Sie es erneut.")
+
+    # Validierung für Telefonnummer
+    while True:
+        telefon = input("Telefonnummer des Kunden: ")
+        if telefon.replace('+', '').isdigit() and (telefon.startswith('+') or not telefon.startswith('+')):
+            break
+        else:
+            print("Ungültige Telefonnummer. Bitte geben Sie nur Ziffern ein (optional mit + am Anfang).")
 
     if name in kunden:
         print(f"Fehler: Kunde '{name}' existiert bereits im Katalog.")
@@ -53,7 +68,7 @@ def kunde_suchen():
         print(f"  Telefon: {details.get('telefon', 'N/A')}")
         print("-------------------------")
 
-def kunde_aktualisieren():
+def kunde_aktualisieren(): # GEÄNDERT: Mit Validierung
     print("\n--- Kunden aktualisieren ---")
     name_zu_aktualisieren = input("Name des zu aktualisierenden Kunden: ")
 
@@ -66,11 +81,17 @@ def kunde_aktualisieren():
     print(f"  Telefon: {kunden[name_zu_aktualisieren]['telefon']}")
 
     neue_email = input("Neue E-Mail (leer lassen für keine Änderung): ")
-    neue_telefon = input("Neue Telefonnummer (leer lassen für keine Änderung): ")
-
     if neue_email:
+        while not re.match(r"[^@]+@[^@]+\.[^@]+", neue_email):
+            print("Ungültiges E-Mail-Format. Bitte versuchen Sie es erneut.")
+            neue_email = input("Neue E-Mail (leer lassen für keine Änderung): ")
         kunden[name_zu_aktualisieren]['email'] = neue_email
+
+    neue_telefon = input("Neue Telefonnummer (leer lassen für keine Änderung): ")
     if neue_telefon:
+        while not (neue_telefon.replace('+', '').isdigit() and (neue_telefon.startswith('+') or not neue_telefon.startswith('+'))):
+            print("Ungültige Telefonnummer. Bitte geben Sie nur Ziffern ein (optional mit + am Anfang).")
+            neue_telefon = input("Neue Telefonnummer (leer lassen für keine Änderung): ")
         kunden[name_zu_aktualisieren]['telefon'] = neue_telefon
 
     print(f"Kunde '{name_zu_aktualisieren}' wurde aktualisiert.")
@@ -84,7 +105,7 @@ def kunde_loeschen():
     else:
         print(f"Fehler: Kunde '{name_zu_loeschen}' nicht im Katalog gefunden.")
 
-def katalog_speichern(): # NEU
+def katalog_speichern():
     try:
         with open(DATEINAME, 'w', encoding='utf-8') as f:
             json.dump(kunden, f, indent=4, ensure_ascii=False)
@@ -92,7 +113,7 @@ def katalog_speichern(): # NEU
     except IOError as e:
         print(f"Fehler beim Speichern des Katalogs: {e}")
 
-def katalog_laden(): # NEU
+def katalog_laden():
     global kunden
     try:
         with open(DATEINAME, 'r', encoding='utf-8') as f:
@@ -115,11 +136,11 @@ def zeige_menue():
     print("3. Kunde suchen")
     print("4. Kunde aktualisieren")
     print("5. Kunde löschen")
-    print("6. Beenden") # GEÄNDERT
+    print("6. Beenden")
     print("----------------")
 
 def main():
-    katalog_laden() # GEÄNDERT: Laden beim Start
+    katalog_laden()
     while True:
         zeige_menue()
         wahl = input("Ihre Wahl: ")
@@ -134,8 +155,8 @@ def main():
             kunde_aktualisieren()
         elif wahl == '5':
             kunde_loeschen()
-        elif wahl == '6': # GEÄNDERT
-            katalog_speichern() # GEÄNDERT: Speichern vor dem Beenden
+        elif wahl == '6':
+            katalog_speichern()
             print("Programm wird beendet. Auf Wiedersehen!")
             break
         else:
@@ -144,9 +165,7 @@ def main():
 if __name__ == "__main__":
     main()
 
-
-
 # Test der Funktion (wird später durch ein Menü ersetzt)
-# kunde_hinzufuegen()
-# kunden_anzeigen()
+kunde_hinzufuegen()
+kunden_anzeigen()
 
